@@ -10,8 +10,8 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Compiling project'
-                bat 'mvn clean compile'
+                echo 'Building application'
+                bat 'mvn clean package'
             }
         }
 
@@ -21,14 +21,22 @@ pipeline {
                 bat 'mvn test'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application'
+                bat 'mkdir C:\\deploy'
+                bat 'copy target\\HelloJenkins-1.0.jar C:\\deploy'
+            }
+        }
     }
 
     post {
         success {
-            echo 'JUnit tests passed successfully'
+            echo 'Build, Test and Deployment completed successfully'
         }
         failure {
-            echo 'JUnit tests failed'
+            echo 'Build/Test failed – Deployment skipped'
         }
     }
 }
